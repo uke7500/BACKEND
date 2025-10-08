@@ -11,7 +11,8 @@ dotenv.config();
 const app = express();
 // app.use(cors({ origin: process.env.FRONTEND_URL })); // Vite dev origin
 app.use(cors({
-    origin: process.env.FRONTEND_URL, // your frontend URL
+    origin: process.env.FRONTEND_URL, 
+    // origin: "http://localhost:5173", 
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"], // allow content-type
     credentials: true
@@ -139,9 +140,8 @@ app.post("/capture-paypal-order", async (req, res) => {
             const { full_name, address, phone, city, postal_code, country, state, delivery_time, shipping_type, email, order_id } = shipping_data.data;
 
             const productData = await getOrderData(documentId);
-            const { total_price, cart_subtotal_price, discount } = productData.data[0];
+            const { total_price, cart_subtotal_price, discount, shipping_charges } = productData.data[0];
             const order_items = productData.data[0].order_item;
-
 
             // 1. Send email to buyer
             await sendEmail(
@@ -161,18 +161,18 @@ app.post("/capture-paypal-order", async (req, res) => {
                 <p><b>Email:</b> ${email}</p>
                 <p><b>-------------</b></p>
                 <h2><b>Shipping Address:</b></h2>
-                <p><b>Phone: </b>${phone}</p>
-                <p><b>Address: </b>${address}</p>
                 <p><b>Country: </b>${country}</p>
-                <p><b>State: </b>${state}</p>
-                <p><b>City: </b>${city}</p>
+                <p><b>Region: </b>${city}</p>
+                <p><b>City: </b>${state}</p>
+                <p><b>Address: </b>${address}</p>
+                <p><b>Phone: </b>${phone}</p>
                 <p><b>Postal Code: </b>${postal_code}</p>
                 <p><b>Delivery Time: </b>${delivery_time}</p>
-                <p><b>Shipping Type: </b>${shipping_type}</p>
                 <p><b>Order ID:</b> ${order_id}</p>
                 <p><b>-------------</b></p>
                 <h2><b>Payment Details:</b></h2>
                 <p><b>Cart Total Price: </b>${cart_subtotal_price}</p>
+                <p><b>Shipping Charges: </b>${shipping_charges}</p>
                 <p><b>Discount: </b>${discount}</p>
                 <p><b>Total: </b>${total_price}</p>
                 <p><b>-------------</b></p>
@@ -204,5 +204,4 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.listen(process.env.PORT || 5000, () => {
     console.log("Backend running on http://localhost:5000");
-    console.log("Ensure .env has PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, EMAIL_USER, EMAIL_PASS, OWNER_EMAIL");
 });

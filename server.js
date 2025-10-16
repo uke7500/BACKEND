@@ -7,6 +7,9 @@ import nodemailer from "nodemailer"; // npm i nodemailer
 import getShippingData from "./utils/getShippingData.js";
 import getOrderData from "./utils/getOrderData.js";
 
+// OWNER EMAIL
+const OWNER_EMAIL = process.env.OWNER_EMAIL;
+
 dotenv.config();
 const app = express();
 // app.use(cors({ origin: process.env.FRONTEND_URL })); // Vite dev origin
@@ -155,7 +158,7 @@ app.post("/capture-paypal-order", async (req, res) => {
 
             // 2. Send email to owner
             await sendEmail(
-                "sutharharshp04@gmail.com",
+                OWNER_EMAIL,
                 "New Order Received",
                 `<h2>New Order from ${full_name}</h2>
                 <p><b>Email:</b> ${email}</p>

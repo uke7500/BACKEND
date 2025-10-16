@@ -61,7 +61,7 @@ async function sendEmail(to, subject, html) {
     });
 
     await transporter.sendMail({
-        from: `"My Shop" <${process.env.EMAIL_USER}>`,
+        from: `"Patel Security Solutions" <${process.env.EMAIL_USER}>`,
         to,
         subject,
         html,
@@ -185,6 +185,7 @@ app.post("/capture-paypal-order", async (req, res) => {
                     <p><b>Product:</b> ${item.product.name}</p>
                     <p><b>Quantity:</b> ${item.quantity}</p>
                     <p><b>Model No.:</b> ${item.product.model_no}</p>
+                    <p><b>---</b></p>
                 `).join("")}`
             );
 
